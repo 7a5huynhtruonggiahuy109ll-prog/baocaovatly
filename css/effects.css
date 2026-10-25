@@ -1,0 +1,21 @@
+/* Hiệu ứng kính mờ, viền neon, dock nổi, máy tính nhanh (từ v2) */
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes spinAng{to{--ang:360deg}}
+.lab-shell{background:linear-gradient(155deg,rgba(14,30,48,.62),rgba(8,17,30,.5));backdrop-filter:blur(20px) saturate(1.3);-webkit-backdrop-filter:blur(20px) saturate(1.3)}
+.theory-card,.quiz-box,.game-stat{backdrop-filter:blur(20px) saturate(1.3);-webkit-backdrop-filter:blur(20px) saturate(1.3)}
+.neon{position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;z-index:2;background:conic-gradient(from var(--ang),transparent 0 68%,#4de8f3 84%,#b69aff 94%,transparent);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spinAng 7s linear infinite}
+.dock{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:6;display:flex;gap:4px;padding:6px;border-radius:16px;background:rgba(8,18,32,.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(77,232,243,.3);box-shadow:0 0 24px rgba(77,232,243,.15);max-width:96%;overflow-x:auto}
+.dock button{border:0;background:transparent;color:var(--muted);padding:7px 11px;border-radius:11px;font:600 12px 'JetBrains Mono',monospace;white-space:nowrap;transition:background .2s,color .2s,box-shadow .2s}
+.dock button:hover,.dock button.on{background:rgba(77,232,243,.16);color:var(--cyan);box-shadow:0 0 14px rgba(77,232,243,.3)}
+.dock .sep{width:1px;background:var(--line);margin:4px 2px}
+.viewport:fullscreen{height:100vh;border-radius:0;border:0}
+.viewport:-webkit-full-screen{height:100vh;border-radius:0;border:0}
+.calc-wrap{margin-top:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px}
+.calc-card{position:relative;padding:20px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(11,24,40,.55);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.calc-card h3{margin:0 0 4px;font-size:16px}
+.calc-row{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.calc-row label{flex:1 1 90px;font-size:11px;color:var(--muted)}
+.calc-row input{width:100%;margin-top:4px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#050e19;color:var(--white);font:13px 'JetBrains Mono',monospace}
+.calc-out{margin-top:12px;padding:10px 12px;border-radius:10px;background:#050e19;border:1px solid rgba(77,232,243,.25);color:#9eeff5;font:13px 'JetBrains Mono',monospace;line-height:1.7;white-space:pre-line}
+.calc-card canvas{display:block;width:100%;height:120px;margin-top:10px;border-radius:10px;background:#050e19}
+@media (prefers-reduced-motion:reduce){.neon{animation:none}}

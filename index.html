@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050b16">
+<title>PHYSICS.MED.AI — Vật lí trong chẩn đoán y học</title>
+<meta name="description" content="Học Vật lí 12 qua mô phỏng 3D: X-quang, CT, siêu âm, MRI, ca học tập và trò chơi cứu hộ.">
+<meta property="og:title" content="PHYSICS.MED.AI — Vật lí trong chẩn đoán y học">
+<meta property="og:description" content="Học Vật lí 12 qua mô phỏng 3D: X-quang, CT, siêu âm, MRI, ca học tập và trò chơi cứu hộ.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23071522'/%3E%3Ccircle cx='32' cy='32' r='9' fill='%234de8f3'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='%23b69aff' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/legacy.css">
+<link rel="stylesheet" href="css/effects.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body data-stage="intro">
+<div class="loader" id="loader" role="status" aria-live="polite"><div class="ld-card"><strong class="ld-logo">PHYSICS.MED.AI</strong><div class="ld-bar"><i id="ldBar"></i></div><p><span id="ldPct">0%</span> · <span id="ldTxt">Đang khởi động…</span></p><button class="rb-btn" id="ldSkip" type="button" hidden>Vào không cần 3D</button></div></div>
+
+<!-- Nền tương tác của màn khởi động / trung tâm -->
+<div class="stage-bg" aria-hidden="true"><div class="glow g1"></div><div class="glow g2"></div><div class="grid-floor"></div></div>
+<svg id="beam" aria-hidden="true"><line id="beamLine" x1="0" y1="0" x2="0" y2="0"/></svg>
+<div id="reticle" aria-hidden="true"></div>
+
+<!-- 1. Màn khởi động -->
+<section class="intro" id="intro" aria-label="Màn hình khởi động">
+  <p class="intro-kicker">Báo cáo chuyên đề Vật lí 12 · Kết nối tri thức</p>
+  <h1 class="intro-title">PHYSICS.MED.AI</h1>
+  <p class="intro-sub">Vật lí trong chẩn đoán y học: X-quang, CT, siêu âm và MRI, học bằng thí nghiệm 3D tương tác.</p>
+  <button class="start" id="startBtn" data-go="hub" type="button">Khởi động hệ thống</button>
+  <p class="intro-credit">THPT Chuyên Lê Quý Đôn – Gia Lai · Tác giả Huỳnh Trương Gia Huy</p>
+</section>
+
+<!-- 2. Trung tâm chọn phòng -->
+<section class="hub" id="hub" aria-label="Chọn không gian học tập">
+  <div class="hub-head">
+    <h2>Chọn không gian học tập</h2>
+    <p class="hub-sub">Di chuột để xem nội dung từng phòng, nhấn để bước vào.</p>
+  </div>
+  <div class="hud-strip" id="hudStrip"><div class="lvl"><strong id="lvl">Cấp 1</strong><span id="xpTxt">0 XP</span></div><div class="xpbar"><i id="xpBar"></i></div><div class="badges" id="badges"></div><button class="rb-btn" id="helpBtn" type="button">Hướng dẫn</button><button class="rb-btn" id="resetProg" type="button">Xóa tiến độ</button></div>
+  <nav class="portals">
+    <a class="portal" href="#theory" data-go="theory" style="--c:#b69aff;--i:0" data-say="Ôn công thức và nguyên lí, có máy tính tính nhanh ngay tại chỗ.">
+      <svg class="p-ico" viewBox="0 0 48 48"><path d="M7 10c6-3 12-2 17 3v26c-5-5-11-6-17-3zM41 10c-6-3-12-2-17 3v26c5-5 11-6 17-3z"/></svg>
+      <h3>Ôn tập lý thuyết</h3>
+      <p>Bốn chủ đề cốt lõi: tia X, siêu âm, MRI và an toàn bức xạ. Kèm máy tính mô phỏng nhanh.</p>
+      <span class="p-meta">4 chủ đề · 4 máy tính</span><span class="p-go">Vào phòng</span>
+    </a>
+    <a class="portal" href="#lab" data-go="lab" style="--c:#4de8f3;--i:1" data-say="Bốn thiết bị 3D: kéo, xoay, chỉnh thông số và đọc số liệu.">
+      <svg class="p-ico" viewBox="0 0 48 48"><path d="M19 6h10M21 6v13L9 38c-1.5 3 .5 5 3 5h24c2.5 0 4.5-2 3-5L27 19V6M14 31h20"/></svg>
+      <h3>Phòng thực nghiệm 3D</h3>
+      <p>X-quang, CT, siêu âm và MRI dựng 3D. Kéo thả, chỉnh thông số, quan sát số liệu thay đổi.</p>
+      <span class="p-meta">4 thiết bị · thí nghiệm A–D</span><span class="p-go">Vào phòng</span>
+    </a>
+    <a class="portal" href="#cases" data-go="cases" style="--c:#50e3a4;--i:2" data-say="Chọn phương thức chẩn đoán phù hợp cho từng ca bệnh mô phỏng.">
+      <svg class="p-ico" viewBox="0 0 48 48"><rect x="10" y="8" width="28" height="34" rx="4"/><path d="M17 8V5h14v3M17 20h14M17 28h14M17 35h8"/></svg>
+      <h3>Ca học tập</h3>
+      <p>Đọc tình huống, chọn phương thức phù hợp và giải thích giới hạn của lựa chọn.</p>
+      <span class="p-meta">4 ca · phản hồi tức thì</span><span class="p-go">Vào phòng</span>
+    </a>
+    <a class="portal" href="#game" data-go="game" style="--c:#ff6f91;--i:3" data-say="Lái xe cấp cứu 3D, né vật cản và trả lời câu hỏi ở mỗi trạm.">
+      <svg class="p-ico" viewBox="0 0 48 48"><path d="M4 26h10l4-12 8 24 6-18 3 6h9"/></svg>
+      <h3>Trò chơi cứu hộ</h3>
+      <p>Lái xe cấp cứu trên đường 3D, né vật cản và vượt 6 trạm kiến thức trước khi hết giờ.</p>
+      <span class="p-meta">6 trạm · 120 giây</span><span class="p-go">Vào phòng</span>
+    </a>
+  </nav>
+</section>
+
+<!-- Robot PHY-BOT: cánh tay chỉ theo con trỏ bằng IK 2 khớp (js/app.js) -->
+<div class="robot-wrap" id="robot" aria-hidden="true">
+  <div class="bubble" id="say">Xin chào, mình là PHY-BOT! Hãy di chuột, mình sẽ chỉ đường cho bạn.</div>
+  <svg id="robotSvg" viewBox="0 0 400 440">
+    <defs>
+      <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2c4a6c"/><stop offset="1" stop-color="#0c1a2c"/></linearGradient>
+      <radialGradient id="eg"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="#4de8f3"/><stop offset="1" stop-color="#4de8f3" stop-opacity="0"/></radialGradient>
+      <filter id="rblur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7"/></filter>
+    </defs>
+    <ellipse cx="200" cy="424" rx="86" ry="9" fill="#4de8f3" opacity=".22" filter="url(#rblur)"/>
+    <g class="float">
+      <ellipse class="thrust" cx="200" cy="356" rx="42" ry="10" fill="#4de8f3" filter="url(#rblur)"/>
+      <g class="part" style="--d:.5s">
+        <rect x="138" y="190" width="124" height="152" rx="48" fill="url(#rg)" stroke="#4de8f3" stroke-opacity=".6" stroke-width="2"/>
+        <rect x="162" y="226" width="76" height="48" rx="10" fill="#050d18" stroke="#4de8f3" stroke-opacity=".4"/>
+        <polyline class="ecg" points="168,252 184,252 190,238 198,268 206,246 212,252 232,252" fill="none" stroke="#50e3a4" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="200" cy="304" r="10" fill="url(#eg)"/>
+      </g>
+      <g data-arm data-s="132,214" data-side="-1" class="part" style="--d:.8s">
+        <g class="up"><line x2="62" stroke="#071220" stroke-width="19" stroke-linecap="round"/><line x2="62" stroke="#2c4a6c" stroke-width="12" stroke-linecap="round"/>
+          <g class="fo"><line x2="56" stroke="#071220" stroke-width="17" stroke-linecap="round"/><line x2="56" stroke="#2c4a6c" stroke-width="10" stroke-linecap="round"/>
+            <circle cx="58" r="10" fill="#2c4a6c" stroke="#4de8f3"/><line x1="64" x2="80" stroke="#4de8f3" stroke-width="5" stroke-linecap="round"/><circle class="tip" cx="82" r="7" fill="url(#eg)"/></g>
+          <circle r="11" fill="#2c4a6c" stroke="#4de8f3"/></g>
+      </g>
+      <g data-arm data-s="268,214" data-side="1" class="part" style="--d:.8s">
+        <g class="up"><line x2="62" stroke="#071220" stroke-width="19" stroke-linecap="round"/><line x2="62" stroke="#2c4a6c" stroke-width="12" stroke-linecap="round"/>
+          <g class="fo"><line x2="56" stroke="#071220" stroke-width="17" stroke-linecap="round"/><line x2="56" stroke="#2c4a6c" stroke-width="10" stroke-linecap="round"/>
+            <circle cx="58" r="10" fill="#2c4a6c" stroke="#4de8f3"/><line x1="64" x2="80" stroke="#4de8f3" stroke-width="5" stroke-linecap="round"/><circle class="tip" cx="82" r="7" fill="url(#eg)"/></g>
+          <circle r="11" fill="#2c4a6c" stroke="#4de8f3"/></g>
+      </g>
+      <g transform="translate(200 120)" class="part" style="--d:.2s">
+        <g id="hd">
+          <line y1="-46" y2="-68" stroke="#4de8f3" stroke-width="3"/><circle cy="-72" r="7" fill="url(#eg)"/>
+          <rect x="-72" y="-8" width="11" height="30" rx="5" fill="#2c4a6c" stroke="#4de8f3" stroke-opacity=".5"/><rect x="61" y="-8" width="11" height="30" rx="5" fill="#2c4a6c" stroke="#4de8f3" stroke-opacity=".5"/>
+          <rect x="-62" y="-46" width="124" height="94" rx="38" fill="url(#rg)" stroke="#4de8f3" stroke-opacity=".7" stroke-width="2"/>
+          <rect x="-48" y="-26" width="96" height="54" rx="25" fill="#040a14"/>
+          <g class="eyes"><circle class="eye" cx="-20" cy="1" r="10" fill="#4de8f3" opacity=".85"/><circle class="eye" cx="20" cy="1" r="10" fill="#4de8f3" opacity=".85"/>
+            <circle class="pupil" cx="-20" cy="1" r="4" fill="#fff"/><circle class="pupil" cx="20" cy="1" r="4" fill="#fff"/></g>
+        </g>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<!-- 3. Thanh phòng (chỉ hiện khi đang ở trong phòng). Giữ id menuBtn/mobileNav/motionBtn vì js/lab3d.js dùng. -->
+<header class="room-bar" id="roomBar">
+  <button class="rb-btn" type="button" data-go="hub" aria-label="Về trung tâm">‹ Trung tâm</button>
+  <div class="rb-title"><i class="rb-dot"></i><span id="roomTitle">Phòng học</span></div>
+  <nav class="rb-nav" id="roomNav" aria-label="Chuyển phòng">
+    <button type="button" data-go="theory" style="--c:#b69aff">Lý thuyết</button>
+    <button type="button" data-go="lab" style="--c:#4de8f3">Thực nghiệm</button>
+    <button type="button" data-go="cases" style="--c:#50e3a4">Ca học tập</button>
+    <button type="button" data-go="game" style="--c:#ff6f91">Trò chơi</button>
+  </nav>
+  <div class="rb-tools">
+    <button id="motionBtn" class="rb-btn" type="button" title="Giảm hiệu ứng chuyển động" aria-label="Giảm hiệu ứng">◌</button>
+    <button id="menuBtn" class="rb-btn" type="button" aria-label="Mở menu">☰</button>
+  </div>
+  <div id="mobileNav" style="display:none">
+    <a href="#theory" data-go="theory">Ôn tập lý thuyết</a><a href="#lab" data-go="lab">Phòng thực nghiệm 3D</a><a href="#cases" data-go="cases">Ca học tập</a><a href="#game" data-go="game">Trò chơi cứu hộ</a>
+  </div>
+</header>
+
+<main>
+        <section id="lab" class="section room" data-room="lab">
+            <div class="container">
+                <div class="section-head">
+                    <div class="eyebrow">INTERACTIVE MEDICAL LAB</div>
+                    <h2>Phòng thí nghiệm <span class="gradient-text">3D tương tác</span></h2>
+                    <p>Kéo chuột để xoay góc nhìn, cuộn để phóng to/thu nhỏ. Với mỗi module: dự đoán trước, thử nghiệm,
+                        đọc số liệu rồi giải thích. Mô hình toán học đã giản lược để học nguyên lí, không phải ảnh chẩn
+                        đoán thật hay hướng dẫn tự lựa chọn xét nghiệm.</p>
+                </div>
+                <div class="lab-shell">
+                    <div class="lab-tabs" role="tablist"><button class="tab active" data-machine="xray"><strong>01 ·
+                                X-QUANG</strong><span>Độ xuyên và số photon</span></button><button class="tab"
+                            data-machine="ct"><strong>02 · CT SCAN</strong><span>Mặt phẳng lát
+                                cắt</span></button><button class="tab" data-machine="us"><strong>03 · SIÊU
+                                ÂM</strong><span>Tần số, gel và phản xạ</span></button><button class="tab"
+                            data-machine="mri"><strong>04 · MRI</strong><span>Từ trường và xung RF</span></button></div>
+                    <div class="lab-layout">
+                        <div class="viewport-wrap">
+                            <div id="labViewport" class="viewport">
+                                <div class="viewport-hud"><span class="hud-chip" id="sceneName">SCENE 01 /
+                                        X-RAY</span><span class="hud-chip">DRAG <strong>↻ ROTATE</strong> · SCROLL
+                                        ZOOM</span></div>
+                                <div id="labFallback" class="scene-fallback">Không thể tải thư viện 3D. Hãy kiểm tra kết
+                                    nối Internet rồi mở lại tệp.</div>
+                                <div class="viewport-help"><span id="sceneCaption">Mô hình cơ thể · chùm tia · đầu
+                                        thu</span><span>Đồ họa 3D mang tính minh họa</span></div>
+                            </div>
+                            <div id="ctPreviewRow" class="panel"
+                                style="display:none;margin-top:10px;align-items:center;gap:14px"><canvas id="ctPreview"
+                                    width="180" height="180"
+                                    style="width:118px;height:118px;border-radius:12px;background:#050c16;flex:none"></canvas>
+                                <div>
+                                    <div class="eyebrow">AXIAL SLICE PREVIEW</div><strong id="ctPreviewTitle"
+                                        style="font-size:12px">Lát cắt mô phỏng</strong>
+                                    <p id="ctPreviewText" class="desc" style="margin-top:5px">Mặt cắt đồng bộ với vị trí
+                                        mặt phẳng trong mô hình 3D.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-column">
+                            <div class="panel" id="xrayControls">
+                                <h3>Điều khiển máy X-quang</h3>
+                                <p class="desc">Điện áp quyết định năng lượng cực đại; dòng điện ống chủ yếu ảnh hưởng
+                                    số photon phát ra trong cùng thời gian.</p>
+                                <div class="control-row"><label class="control-label" for="kv"><span>Điện áp
+                                            ống</span><output id="kvOut">100 kV</output></label><input id="kv"
+                                        class="range" type="range" min="50" max="200" value="100">
+                                    <div class="range-ends"><span>50 kV</span><span>200 kV</span></div>
+                                </div>
+                                <div class="control-row"><label class="control-label" for="ma"><span>Dòng điện
+                                            ống</span><output id="maOut">50 mA</output></label><input id="ma"
+                                        class="range" type="range" min="10" max="150" value="50">
+                                    <div class="range-ends"><span>10 mA</span><span>150 mA</span></div>
+                                </div>
+                                <div class="metrics">
+                                    <div class="metric"><span>Năng lượng cực đại</span><strong id="xEnergy"
+                                            class="cyan">100 keV</strong></div>
+                                    <div class="metric"><span>Bước sóng cực tiểu</span><strong id="xWave">0,0124
+                                            nm</strong></div>
+                                    <div class="metric"><span>Độ xuyên tương đối*</span><strong id="xPen"
+                                            class="cyan">33%</strong></div>
+                                    <div class="metric"><span>Số photon tương đối*</span><strong id="xPhot">29%</strong>
+                                    </div>
+                                </div>
+                                <div class="lesson-box" aria-labelledby="xrayLessonTitle">
+                                    <h4 id="xrayLessonTitle">Thí nghiệm A · Vì sao xương hiện rõ hơn?</h4>
+                                    <p>Thử tăng bề dày mô và lớp lọc nhôm. Hai vật liệu suy giảm chùm tia khác nhau; lớp
+                                        lọc làm giảm thành phần photon năng lượng thấp, khiến chùm tia trung bình “cứng”
+                                        hơn. Các hệ số dưới đây là hệ số hiệu dụng giả lập, không phải thông số máy bệnh
+                                        viện.</p>
+                                    <div class="control-row"><label class="control-label" for="xrayThickness"><span>Bề
+                                                dày mô tương đương d</span><output id="xrayThicknessOut">5,0
+                                                cm</output></label><input id="xrayThickness" class="range" type="range"
+                                            min="0" max="10" step="0.5" value="5">
+                                        <div class="range-ends"><span>0 cm</span><span>10 cm</span></div>
+                                    </div>
+                                    <div class="control-row"><label class="control-label" for="xrayAl"><span>Lớp lọc
+                                                nhôm</span><output id="xrayAlOut">1,0 mm Al</output></label><input
+                                            id="xrayAl" class="range" type="range" min="0" max="5" step="0.5" value="1">
+                                        <div class="range-ends"><span>0 mm</span><span>5 mm</span></div>
+                                    </div>
+                                    <div class="lesson-formula">I = I₀e<sup>−μd</sup> &nbsp; · &nbsp; E<sub>max</sub>
+                                        (keV) ≈ U (kV)</div>
+                                    <p class="small-detail">I₀: cường độ ban đầu; I: cường độ sau mô; μ: hệ số suy giảm
+                                        hiệu dụng (cm⁻¹); d: bề dày (cm). Công thức áp dụng cho chùm tia đơn năng lý
+                                        tưởng; chùm tia X thực có phổ năng lượng và có thể xảy ra hiện tượng cứng hóa
+                                        chùm tia.</p>
+                                    <div class="lesson-grid">
+                                        <div class="lesson-stat"><small>Truyền qua mô mềm</small><strong
+                                                id="xraySoftTransmission">—</strong></div>
+                                        <div class="lesson-stat"><small>Truyền qua xương</small><strong
+                                                id="xrayBoneTransmission">—</strong></div>
+                                        <div class="lesson-stat"><small>Chênh lệch tín hiệu mô hình</small><strong
+                                                id="xrayContrast">—</strong></div>
+                                        <div class="lesson-stat"><small>Xu hướng chùm tia sau lọc</small><strong
+                                                id="xrayBeamQuality">—</strong></div>
+                                    </div><canvas id="xrayPlot" class="lesson-canvas" width="480" height="150"
+                                        aria-label="Đồ thị cường độ truyền qua theo bề dày"></canvas>
+                                    <p id="xrayPlotCaption">Đồ thị cho thấy cường độ tương đối suy giảm khi bề dày tăng.
+                                    </p>
+                                    <div id="xrayLessonFeedback" class="lesson-feedback">Hãy kéo bề dày từ 2 cm lên 6
+                                        cm: cường độ truyền qua phải giảm theo hàm mũ, không giảm tuyến tính.</div>
+                                    <h4 style="margin-top:14px">Thử thách · Tìm điện áp thấp nhất trong mô hình</h4>
+                                    <p>Đặt bề dày xương tương đương 5 cm. Với mục tiêu của trò chơi là truyền qua xương
+                                        ≥ 10% và chênh lệch mô mềm–xương ≥ 10 điểm phần trăm, hãy tìm kV thấp nhất đáp
+                                        ứng cả hai điều kiện. Các ngưỡng này chỉ dùng cho bài tập, không phải tiêu chuẩn
+                                        chụp lâm sàng.</p>
+                                    <div class="choice-pills"><button id="xrayChallengeStart" class="btn inline-btn"
+                                            type="button">Bắt đầu thử thách</button><button id="xrayChallengeCheck"
+                                            class="btn inline-btn primary" type="button">Kiểm tra mức kV</button></div>
+                                    <div id="xrayChallengeFeedback" class="lesson-feedback" aria-live="polite">Bắt đầu
+                                        để đặt bề dày về 5 cm, sau đó điều chỉnh kV và kiểm tra từng bước.</div>
+                                </div><button class="btn inline-btn" id="resetXray" style="margin-top:12px">↺ Đặt lại
+                                    thông số</button>
+                            </div>
+                            <div class="panel" id="ctControls" style="display:none">
+                                <h3>Điều khiển lát cắt CT</h3>
+                                <p class="desc">Kéo mặt phẳng cắt đi qua mô hình đầu. Vị trí cắt và ảnh lát cắt minh họa
+                                    sẽ thay đổi đồng bộ.</p>
+                                <div class="control-row"><label class="control-label" for="slice"><span>Vị trí lát
+                                            cắt</span><output id="sliceOut">50%</output></label><input id="slice"
+                                        class="range violet-range" type="range" min="0" max="100" value="50">
+                                    <div class="range-ends"><span>Phía trước</span><span>Trung tâm</span><span>Phía
+                                            sau</span></div>
+                                </div>
+                                <div class="metrics">
+                                    <div class="metric"><span>Vùng khảo sát</span><strong id="ctRegion"
+                                            class="violet">Não giữa</strong></div>
+                                    <div class="metric"><span>HU minh họa</span><strong id="ctHU">+35 HU</strong></div>
+                                </div>
+                                <div class="lesson-box">
+                                    <h4>Thí nghiệm B · Đọc thang Hounsfield (HU)</h4>
+                                    <p>Vị trí lát cắt minh họa vùng giải phẫu; HU phụ thuộc loại mô được chọn trong bảng
+                                        dưới, không phải một con số duy nhất đại diện cho cả lát cắt.</p>
+                                    <div class="lesson-formula">HU = 1000 × (μ<sub>mô</sub> − μ<sub>nước</sub>) /
+                                        μ<sub>nước</sub></div>
+                                    <p class="small-detail">μ là hệ số suy giảm tuyến tính ở năng lượng tia X hiệu dụng.
+                                        Theo quy ước, nước ≈ 0 HU và không khí ≈ −1000 HU. Giá trị thực thay đổi theo
+                                        mô, điện áp, máy và thuật toán tái tạo.</p>
+                                    <div class="case-form-row"><label for="huTissue">Chọn loại mô để so
+                                            sánh</label><select id="huTissue" class="lesson-select">
+                                            <option value="air">Không khí</option>
+                                            <option value="fat">Mỡ</option>
+                                            <option value="water">Nước</option>
+                                            <option value="soft" selected>Mô mềm (xấp xỉ)</option>
+                                            <option value="bone">Xương đặc</option>
+                                        </select></div>
+                                    <div class="lesson-grid">
+                                        <div class="lesson-stat"><small>Khoảng HU điển hình</small><strong
+                                                id="huValue">+20 đến +50</strong></div>
+                                        <div class="lesson-stat"><small>Ý nghĩa tương đối</small><strong
+                                                id="huMeaning">Suy giảm trung bình</strong></div>
+                                    </div>
+                                    <div id="huFeedback" class="lesson-feedback">HU được chuẩn hóa theo nước: nước gần 0
+                                        HU, không khí gần −1000 HU. Giá trị thực biến thiên theo mô, máy và quy trình
+                                        tái tạo.</div>
+                                    <h4 style="margin-top:14px">Tái tạo ảnh · từ nhiều góc chiếu đến ma trận pixel</h4>
+                                    <div class="control-row"><label class="control-label" for="ctAngle"><span>Góc chiếu
+                                                minh họa</span><output id="ctAngleOut">0°</output></label><input
+                                            id="ctAngle" class="range violet-range" type="range" min="0" max="165"
+                                            step="15" value="0">
+                                        <div class="range-ends"><span>0°</span><span>165°</span></div>
+                                    </div><canvas id="ctMatrix" class="lesson-canvas" width="480" height="210"
+                                        aria-label="Ma trận pixel giả lập"></canvas>
+                                    <p id="ctMatrixCaption">Đổi góc chiếu để thấy dữ liệu phép chiếu thay đổi; CT thật
+                                        kết hợp nhiều phép chiếu và thuật toán tái tạo, không chỉ xoay một ma trận.</p>
+                                </div>
+                                <button class="btn inline-btn" id="resetCT" style="margin-top:12px">↺ Đặt lại lát
+                                    cắt</button>
+                            </div>
+                            <div class="panel" id="usControls" style="display:none">
+                                <h3>Điều khiển đầu dò siêu âm</h3>
+                                <p class="desc">Tần số cao làm tăng khả năng phân giải nhưng thường giảm độ xuyên. Gel
+                                    giảm lớp không khí gây phản xạ ở bề mặt da.</p>
+                                <div class="control-row"><label class="control-label" for="freq"><span>Tần số đầu
+                                            dò</span><output id="freqOut">5 MHz</output></label><input id="freq"
+                                        class="range violet-range" type="range" min="2" max="15" value="5" step="0.5">
+                                    <div class="range-ends"><span>2 MHz · sâu hơn</span><span>15 MHz · chi tiết
+                                            hơn</span></div>
+                                </div>
+                                <div class="control-row"><label class="control-label" for="probePos"><span>Vị trí đầu
+                                            dò</span><output id="probeOut">Trung tâm</output></label><input
+                                        id="probePos" class="range violet-range" type="range" min="-100" max="100"
+                                        value="0">
+                                    <div class="range-ends"><span>Trái</span><span>Phải</span></div>
+                                </div><button id="gelBtn" class="btn toggle on" aria-pressed="true"
+                                    style="margin-top:14px">● Gel truyền âm: ĐANG BẬT</button>
+                                <div class="metrics">
+                                    <div class="metric"><span>Độ xuyên tương đối*</span><strong id="usDepth"
+                                            class="violet">84%</strong></div>
+                                    <div class="metric"><span>Tín hiệu nhận*</span><strong id="usSignal"
+                                            class="cyan">92%</strong></div>
+                                </div>
+                                <div class="lesson-box">
+                                    <h4>Thí nghiệm C · Gel có tác dụng gì?</h4>
+                                    <p>Trở kháng âm Z đo bằng MRayl. Sóng gặp ranh giới có Z khác nhau sẽ phản xạ một
+                                        phần. Tính phản xạ cường độ ở ranh giới tới vuông góc bằng công thức bên dưới.
+                                    </p>
+                                    <div class="lesson-formula">R = [(Z₂ − Z₁) / (Z₂ + Z₁)]²</div>
+                                    <p class="small-detail">R là tỉ lệ cường độ bị phản xạ (0–1; nhân 100% để đổi ra
+                                        phần trăm); Z₁, Z₂ là trở kháng âm hai môi trường, tính bằng MRayl. Công thức
+                                        này giả sử sóng tới vuông góc và môi trường không tổn hao đáng kể.</p>
+                                    <div class="lesson-grid">
+                                        <div class="lesson-stat"><small>Không khí → da</small><strong
+                                                id="usRAir">—</strong><span class="small-detail">Z không khí ≈ 0,0004; Z
+                                                da ≈ 1,5 MRayl</span></div>
+                                        <div class="lesson-stat"><small>Gel → da</small><strong
+                                                id="usRGel">—</strong><span class="small-detail">Ví dụ Z gel ≈ 1,48
+                                                MRayl, gần với da</span></div>
+                                        <div class="lesson-stat"><small>Độ sâu ước tính khi echo mất 20
+                                                dB</small><strong id="usDepthCm">—</strong></div>
+                                        <div class="lesson-stat"><small>Suy giảm echo hai chiều ở 5 cm</small><strong
+                                                id="usLossDb">—</strong></div>
+                                    </div>
+                                    <div class="lesson-formula">Mô hình mô mềm gần đúng: α ≈ 0,5 dB / (cm·MHz);
+                                        A<sub>echo</sub> ≈ 2αfd; d<sub>20 dB</sub> ≈ 20 / f (cm)</div>
+                                    <div id="usLessonFeedback" class="lesson-feedback">Khi gel tắt, khe không khí tạo
+                                        chênh lệch trở kháng rất lớn nên phần lớn sóng bị phản xạ ngay bề mặt. Tần số
+                                        cao giúp phân giải tốt hơn nhưng suy giảm nhanh hơn.</div>
+                                </div><button class="btn inline-btn" id="resetUS" style="margin-top:12px">↺ Đặt lại siêu
+                                    âm</button>
+                            </div>
+                            <div class="panel" id="mriControls" style="display:none">
+                                <h3>Điều khiển hệ MRI</h3>
+                                <p class="desc">Thay đổi từ trường chính B₀ để quan sát tần số Larmor. Phát xung RF để
+                                    mô phỏng proton bị kích thích.</p>
+                                <div class="control-row"><label class="control-label" for="field"><span>Từ trường chính
+                                            B₀</span><output id="fieldOut">1,5 T</output></label><input id="field"
+                                        class="range violet-range" type="range" min="0.5" max="7" value="1.5"
+                                        step="0.5">
+                                    <div class="range-ends"><span>0,5 T</span><span>7 T</span></div>
+                                </div>
+                                <div class="metrics">
+                                    <div class="metric"><span>Tần số Larmor</span><strong id="larmor"
+                                            class="violet">63,87 MHz</strong></div>
+                                    <div class="metric"><span>Trạng thái mô hình</span><strong id="mriState">Cân
+                                            bằng</strong></div>
+                                </div>
+                                <div class="lesson-box">
+                                    <h4>Thí nghiệm D · Tần số Larmor và góc lật</h4>
+                                    <div class="lesson-formula">f₀ = (γ / 2π)B₀ ≈ 42,58 (MHz/T) × B₀ (T)</div>
+                                    <p>Khi B₀ thay đổi, tần số RF cộng hưởng thay đổi tỉ lệ thuận. Chọn góc lật để quan
+                                        sát vectơ từ hóa tổng hợp được mô phỏng lệch khỏi trục dọc.</p>
+                                    <div class="choice-pills"><button id="flip90" class="btn inline-btn primary"
+                                            type="button" aria-pressed="true">90° · ngang</button><button id="flip180"
+                                            class="btn inline-btn" type="button" aria-pressed="false">180° · đảo
+                                            chiều</button></div><canvas id="mriVectorCanvas" class="vector-visual"
+                                        width="360" height="150" aria-label="Vectơ từ hóa minh họa góc lật"></canvas>
+                                    <div class="lesson-grid">
+                                        <div class="lesson-stat"><small>Góc lật đã chọn</small><strong
+                                                id="flipAngleReadout">90°</strong></div>
+                                        <div class="lesson-stat"><small>Ý nghĩa mô hình</small><strong
+                                                id="flipMeaning">Từ hóa ngang</strong></div>
+                                    </div>
+                                    <div id="mriLessonFeedback" class="lesson-feedback">Góc 90° chuyển vectơ từ hóa từ
+                                        gần trục dọc sang mặt phẳng ngang; 180° đảo hướng so với trục dọc. Xung thực tế
+                                        phụ thuộc biên độ và thời lượng xung cùng các điều kiện hệ thống.</div>
+                                </div>
+                                <button class="btn violet" id="rfBtn" style="margin-top:13px;width:100%">ϟ Phát xung RF
+                                    90°</button><button class="btn inline-btn" id="resetMRI" style="margin-top:9px">↺
+                                    Đặt lại MRI</button>
+                            </div>
+                            <div class="panel explanation">
+                                <div class="eyebrow">OBSERVATION / GIẢI THÍCH</div>
+                                <p id="labExplain">Điện áp ống tăng làm năng lượng cực đại của photon tia X tăng. Dòng
+                                    ống tăng làm số photon tương đối tăng trong mô hình. Hãy kéo thanh điều khiển để so
+                                    sánh.</p>
+                                <div class="readout" id="labReadout">Mẹo: kéo chuột để xoay vật thể; cuộn chuột để phóng
+                                    to. Các chỉ số có dấu * được chuẩn hóa cho mục tiêu học tập, không phải thông số lâm
+                                    sàng.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lab-foot"><span>● Mô hình 3D dựng bằng hình học máy tính</span><span>● Có thể tương tác
+                            bằng chuột / cảm ứng</span><span>● Không thay thế tư vấn y tế</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cases" class="section room" data-room="cases">
+            <div class="container">
+                <div class="section-head">
+                    <div class="eyebrow">DIAGNOSTIC INQUIRY · LEARN BY REASONING</div>
+                    <h2>Ca học tập <span class="gradient-text">Vật lí trong quyết định</span></h2>
+                    <p>Không có thiết bị nào tốt nhất cho mọi tình huống. Hãy xác định câu hỏi cần trả lời, chọn phương
+                        thức phù hợp rồi giải thích giới hạn của lựa chọn. Đây là bài học mô phỏng, không dùng để tự
+                        chẩn đoán.</p>
+                </div>
+                <div class="learning-steps">
+                    <div class="learning-step"><strong>01 · ĐỌC TÌNH HUỐNG</strong><span>Xác định vị trí, độ sâu, mô cần
+                            quan sát và mức độ khẩn cấp.</span></div>
+                    <div class="learning-step"><strong>02 · CHỌN & CẤU HÌNH</strong><span>Chọn phương thức và thông số
+                            liên quan đến nguyên lí vật lí.</span></div>
+                    <div class="learning-step"><strong>03 · KIỂM TRA LÝ DO</strong><span>Nhận phản hồi cả khi sai; sửa
+                            lựa chọn để học từ bằng chứng.</span></div>
+                </div>
+                <div class="case-shell" style="margin-top:16px">
+                    <div class="case-layout">
+                        <div class="case-card">
+                            <div class="case-progress" id="caseCounter">CA 1 / 4</div>
+                            <h3 id="caseTitle" style="margin-top:8px">Khối nhỏ nằm nông ở tuyến giáp</h3>
+                            <p id="casePrompt">Bác sĩ muốn khảo sát một cấu trúc nông, nhỏ ở vùng cổ. Cần phân giải
+                                không gian tốt ở độ sâu thấp.</p>
+                            <div class="case-callout"><strong>Gợi ý tư duy:</strong> Sóng cơ hay bức xạ ion hóa? Cấu
+                                trúc nông hay sâu? Có cần nhìn nhanh không?</div>
+                            <div style="display:flex;justify-content:space-between;gap:8px;margin-top:13px"><button
+                                    id="casePrev" class="btn inline-btn" type="button">← Ca trước</button><button
+                                    id="caseNext" class="btn inline-btn" type="button">Ca tiếp →</button></div>
+                        </div>
+                        <div class="case-card">
+                            <div class="case-form-row"><label for="caseModality">1. Bạn chọn phương thức
+                                    nào?</label><select id="caseModality" class="lesson-select">
+                                    <option value="xray">X-quang thường</option>
+                                    <option value="ct">CT</option>
+                                    <option value="us">Siêu âm</option>
+                                    <option value="mri">MRI</option>
+                                </select></div>
+                            <div id="caseFrequencyWrap" class="case-form-row"><label for="caseFrequency">2. Tần số siêu
+                                    âm (chỉ có ý nghĩa khi chọn siêu âm)</label><input id="caseFrequency" class="range"
+                                    type="range" min="2" max="15" step="0.5" value="5">
+                                <div class="range-ends"><span>2 MHz · sâu hơn</span><output id="caseFrequencyOut">5
+                                        MHz</output><span>15 MHz · chi tiết hơn</span></div>
+                            </div>
+                            <div id="caseSettingWrap" class="case-form-row"><label for="caseSetting">3. Chi tiết kỹ
+                                    thuật cần lưu ý</label><select id="caseSetting" class="lesson-select"></select>
+                            </div><button id="checkCase" class="btn primary" type="button"
+                                style="width:100%;margin-top:5px">Kiểm tra lập luận</button>
+                            <div id="caseResult" class="case-result" aria-live="polite">Chọn phương thức và cấu hình rồi
+                                nhấn “Kiểm tra lập luận”.</div>
+                            <div style="display:flex;gap:8px;align-items:center;margin-top:11px"><span
+                                    class="case-progress">Số ca đã giải đúng:</span><strong id="caseScore"
+                                    style="font:700 13px 'JetBrains Mono',monospace;color:var(--green)">0 /
+                                    4</strong><button id="caseResetScore" class="btn inline-btn" type="button"
+                                    style="margin-left:auto">Làm lại điểm</button></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="note" style="margin-top:12px">Lưu ý đạo đức học tập: các tình huống được đơn giản hóa để minh
+                    họa nguyên lí. Lựa chọn thăm dò hình ảnh trong thực tế do nhân viên y tế quyết định dựa trên khám
+                    lâm sàng, hướng dẫn chuyên môn và điều kiện từng người.</p>
+            </div>
+        </section>
+
+        <section id="theory" class="section room" data-room="theory">
+            <div class="container">
+                <div class="section-head">
+                    <div class="eyebrow">PHYSICS NOTES</div>
+                    <h2>Kiến thức trọng tâm</h2>
+                    <p>Liên hệ hiệu ứng quan sát được trong phòng thí nghiệm với các nguyên lí vật lí phía sau thiết bị.
+                    </p>
+                </div>
+                <div class="theory-grid">
+                    <article class="theory-card">
+                        <div class="theory-icon">☼</div>
+                        <h3>1. Tia X và chụp X-quang / CT</h3>
+                        <p>Tia X là sóng điện từ có bước sóng ngắn. Khi đi qua cơ thể, cường độ suy giảm khác nhau tùy
+                            thành phần, bề dày và năng lượng tia. Xương thường hấp thụ mạnh hơn mô mềm. CT thu nhiều
+                            phép chiếu từ các góc khác nhau rồi dùng máy tính tái tạo lát cắt.</p>
+                        <div class="formula">I = I₀e<sup>−μd</sup> &nbsp; · &nbsp; E<sub>max</sub> (keV) ≈ U (kV)</div>
+                        <div class="note">Chụp X-quang và CT dùng bức xạ ion hóa; cần tối ưu liều theo chỉ định chuyên
+                            môn.</div>
+                    </article>
+                    <article class="theory-card">
+                        <div class="theory-icon" style="background:#211a3c;color:#c4b4ff">〰</div>
+                        <h3>2. Sóng siêu âm</h3>
+                        <p>Đầu dò phát và thu sóng âm tần số cao. Sóng phản xạ tại ranh giới giữa các mô có trở kháng âm
+                            khác nhau. Gel giúp loại bỏ lớp không khí giữa đầu dò và da, cải thiện sự truyền âm vào cơ
+                            thể.</p>
+                        <div class="formula">d = ct / 2 &nbsp; · &nbsp; R = [(Z₂ − Z₁) / (Z₂ + Z₁)]²</div>
+                        <div class="note">d: độ sâu phản xạ; c: tốc độ âm trong mô; t: thời gian đi-về của echo. R là tỉ
+                            lệ cường độ phản xạ tại mặt phân cách, với sóng tới vuông góc.</div>
+                        <div class="note">Tần số cao thường giúp ảnh chi tiết hơn nhưng giảm độ xuyên sâu. Siêu âm không
+                            phải lúc nào cũng truyền tốt qua xương hoặc khí.</div>
+                    </article>
+                    <article class="theory-card">
+                        <div class="theory-icon" style="background:#171d42;color:#aabaff">◎</div>
+                        <h3>3. Cộng hưởng từ MRI</h3>
+                        <p>MRI sử dụng từ trường mạnh và xung sóng vô tuyến để tác động đến trạng thái từ hóa của các
+                            proton, chủ yếu từ hydro. Tín hiệu phát ra khi hệ trở về trạng thái cân bằng được thu và xử
+                            lí thành ảnh. MRI không dùng bức xạ ion hóa.</p>
+                        <div class="formula">f₀ = (γ / 2π)B₀ ≈ 42,58 (MHz/T) × B₀ (T)</div>
+                        <div class="note">Công thức gần đúng cho proton hydro-1; B₀ tính bằng tesla và f₀ thu được bằng
+                            MHz.</div>
+                        <div class="note">Trước khi chụp MRI phải sàng lọc vật kim loại và thiết bị cấy ghép theo quy
+                            trình của cơ sở y tế.</div>
+                    </article>
+                    <article class="theory-card">
+                        <div class="theory-icon" style="background:#12342f;color:#6ce9b5">盾</div>
+                        <h3>4. An toàn bức xạ và ứng dụng AI</h3>
+                        <p>Nguyên tắc ALARA yêu cầu giữ liều bức xạ thấp nhất hợp lí trong khi vẫn đạt mục tiêu chẩn
+                            đoán. AI có thể hỗ trợ tái tạo ảnh, phân tích vùng nghi ngờ và quy trình làm việc, nhưng kết
+                            quả cần được đánh giá trong bối cảnh lâm sàng.</p>
+                        <div class="formula">ALARA = As Low As Reasonably Achievable</div>
+                        <div class="note">Không dùng các con số hiệu quả AI chung chung nếu không có nghiên cứu cụ thể
+                            làm căn cứ.</div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="game" class="section room" data-room="game">
+            <div class="container">
+                <div class="section-head">
+                    <div class="eyebrow" style="color:var(--violet)">MEDICAL RESCUE QUEST</div>
+                    <h2>Nhiệm vụ: <span class="gradient-text">giải cứu bệnh nhân</span></h2>
+                    <p>Trò chơi là phần ôn tập sau phòng thí nghiệm: mỗi câu trả lời phải dựa trên nguyên lí đã quan
+                        sát, không chỉ đoán mẹo. Điểm số phản ánh tiến trình học tập, còn việc cấp cứu thật luôn cần
+                        người có chuyên môn.</p>
+                </div>
+                <div class="game-shell">
+                    <div class="game-stats">
+                        <div class="game-stat"><small>Thời gian còn lại</small><strong id="gameTime">120 s</strong>
+                        </div>
+                        <div class="game-stat"><small>Ổn định bệnh nhân</small><strong id="gameHealth">100%</strong>
+                            <div class="health-track"><i id="healthBar"></i></div>
+                        </div>
+                        <div class="game-stat"><small>Điểm kiến thức</small><strong id="gameScore"
+                                style="color:#bca8ff">0000</strong></div>
+                        <div class="game-stat"><small>Trạm kiến thức</small><strong id="gameProgress">0 / 6</strong>
+                            <div class="health-track"><i id="progressBar"
+                                    style="width:0%;background:linear-gradient(90deg,#8374f7,#c7a4ff)"></i></div>
+                        </div>
+                    </div>
+                    <div id="gameViewport" class="game-viewport">
+                        <div class="game-hud"><span>MISSION <b id="missionNum">01 / 06</b></span><span
+                                id="driveStatus">READY FOR DISPATCH</span></div>
+                        <div id="gameFallback" class="scene-fallback">Không thể tải thư viện 3D. Hãy kiểm tra kết nối
+                            Internet rồi mở lại.</div>
+                        <div id="gameStartOverlay" class="game-overlay">
+                            <div class="game-overlay-card">
+                                <div class="eyebrow" style="color:var(--violet)">EMERGENCY RESPONSE</div>
+                                <h3>Đội cấp cứu, sẵn sàng!</h3>
+                                <p>Điều khiển xe trên đường 3D, né vật cản và hoàn thành các trạm kiến thức.</p>
+                                <div style="margin-top:13px;font-size:10px;color:#92abc2">← → Đổi làn &nbsp; · &nbsp;
+                                    SPACE / ↑ Nhảy</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-controls"><button id="startGame" class="btn violet">▶ Bắt đầu cứu
+                            hộ</button><button id="jumpBtn" class="btn" disabled>↑ Nhảy</button><button id="resetGame"
+                            class="btn">↺ Chơi lại</button>
+                        <div class="spacer"></div>
+                        <div class="touch-controls"><button id="leftBtn" class="btn" aria-label="Sang trái"
+                                disabled>←</button><button id="rightBtn" class="btn" aria-label="Sang phải"
+                                disabled>→</button></div>
+                    </div>
+                    <p class="game-caption">Mẹo: trên máy tính dùng phím ← → để đổi làn, Space hoặc ↑ để nhảy. Trên điện
+                        thoại dùng các nút điều khiển. Hãy tránh chướng ngại vật trước khi chúng chạm xe.</p>
+                    <div id="quizBox" class="quiz-box">
+                        <div class="quiz-top"><span id="stageLabel">TRẠM 1 / 6</span><span>CHỌN ĐÁP ÁN ĐÚNG ĐỂ TIẾP
+                                TỤC</span></div>
+                        <h3 id="gameQuestion">Câu hỏi sẽ xuất hiện tại đây.</h3>
+                        <div id="gameOptions" class="quiz-options"></div>
+                        <div id="gameFeedback" class="feedback"></div><button id="continueGame" class="btn violet"
+                            style="display:none;margin-top:13px">Tiếp tục hành trình →</button>
+                    </div>
+                    <div id="gameResult" class="result">
+                        <div id="resultIcon" class="emoji">🏥</div>
+                        <h3 id="resultTitle">Nhiệm vụ hoàn thành!</h3>
+                        <p id="resultText"></p><button id="playAgain" class="btn primary">↻ Chơi lại nhiệm vụ</button>
+                    </div>
+                </div>
+                <p class="note" style="margin-top:13px">Đây là trò chơi giáo dục mô phỏng kiến thức Vật lí y học, không
+                    thay thế hướng dẫn cấp cứu thực tế. Trong tình huống thật, hãy gọi cấp cứu và làm theo hướng dẫn của
+                    nhân viên y tế.</p>
+            </div>
+        </section>
+
+</main>
+
+<footer class="footer"><div class="container"><strong>PHYSICS.MED.AI / 3D LAB</strong><br>Báo cáo chuyên đề Vật lí · THPT Chuyên Lê Quý Đôn – Gia Lai<br>Tác giả thiết kế và phát triển: Huỳnh Trương Gia Huy · © 2026</div></footer>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<dialog id="help" class="help">
+  <h3>Hướng dẫn &amp; giới thiệu</h3>
+  <h4>Cách học</h4><p>Từ trung tâm, đi theo thứ tự: Ôn tập lý thuyết → Phòng thực nghiệm 3D → Ca học tập → Trò chơi cứu hộ. Tiến độ, XP và huy hiệu được lưu ngay trên máy bạn.</p>
+  <h4>Phím tắt</h4><ul><li><kbd>1</kbd>–<kbd>4</kbd> chuyển phòng · <kbd>H</kbd> về trung tâm · <kbd>?</kbd> mở hướng dẫn</li><li>Kéo chuột để xoay mô hình 3D, cuộn để phóng to; <kbd>←</kbd> <kbd>→</kbd> đổi làn, <kbd>Space</kbd> nhảy khi chơi.</li></ul>
+  <h4>Lưu ý</h4><p>Số liệu là mô hình đã đơn giản hóa để học nguyên lí, không thay thế tư vấn y tế.</p>
+  <h4>Tác giả &amp; nguồn</h4><p>Huỳnh Trương Gia Huy, THPT Chuyên Lê Quý Đôn – Gia Lai. Nội dung bám SGK Vật lí 12 (Kết nối tri thức với cuộc sống). Đồ họa 3D dùng thư viện Three.js (threejs.org).</p>
+  <button class="rb-btn" id="helpClose" type="button">Đóng</button>
+</dialog>
+
+<!-- Lớp chuyển cảnh khi vào phòng -->
+<div class="warp" id="warp" aria-hidden="true">
+  <div class="warp-card"><div id="warpIcon"></div><h3 id="warpTitle"></h3><div class="wbar"><i></i></div><ul id="warpLog"></ul></div>
+</div>
+
+<script src="js/boot-check.js"></script>
+<script src="js/perf.js"></script>
+<script src="js/lessons.js"></script>
+<script src="js/extras.js"></script>
+<script src="js/progress.js"></script>
+<script src="js/app.js"></script>
+<script src="js/logbook.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/lab3d.js"></script>
+</body>
+</html>
